@@ -1,0 +1,6 @@
+# local tooling
+.claude/
+
+# reference material used while building the loader (not part of the site)
+*.mp4
+crown-vs-reference.png

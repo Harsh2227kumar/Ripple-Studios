@@ -1,0 +1,88 @@
+:root {
+  --sky: #aab1c1;
+  --water-hi: #bec3d2;
+  --water-lo: #2a323c;
+  --brand-top: #3a7be0;
+  --brand-bottom: #173f8f;
+  /* the logo's size and place in the loader; the homepage hero logo starts from here */
+  --logo-w: clamp(280px, 44vw, 680px);
+  --logo-y: 41%;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: #14192c;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  /* matches the footage so the first paint before WebGL is already right */
+  background: linear-gradient(to bottom, var(--sky) 0%, var(--water-hi) 25%, #919aae 47%, #4f5869 76%, var(--water-lo) 100%);
+}
+
+#ripple-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  /* hidden until the first frame is drawn (shaders compile in the background) */
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.gl-ready #ripple-canvas { opacity: 1; }
+
+.brand {
+  position: absolute;
+  left: 50%;
+  top: var(--logo-y);
+  width: var(--logo-w);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+}
+.brand-logo svg { display: block; width: 100%; height: auto; overflow: visible; color: var(--brand-bottom); }
+.brand-logo svg path { fill: url(#brand-grad); }
+
+/* portrait: the logo settles below the splash, over darker water */
+@media (max-aspect-ratio: 1/1) {
+  :root { --brand-top: #8fb6ff; --brand-bottom: #4a82e6; --logo-w: min(82vw, 440px); --logo-y: 66%; }
+}
+
+.no-webgl #ripple-canvas { display: none; }
+
+/* WebGL draws the logo; the DOM copy stays laid out so it can be measured */
+.gl-text .brand { opacity: 0; }
+
+.skip {
+  position: absolute;
+  right: 22px;
+  bottom: 18px;
+  padding: 10px 6px;
+  background: none;
+  border: 0;
+  font: 400 11px/1 'Jost', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(222, 230, 244, 0.62);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease, color 0.3s ease;
+}
+.skip.show { opacity: 1; pointer-events: auto; }
+.skip:hover { color: rgba(255, 255, 255, 0.95); }
+.skip:focus-visible { outline: 1px solid rgba(255, 255, 255, 0.6); outline-offset: 3px; }
